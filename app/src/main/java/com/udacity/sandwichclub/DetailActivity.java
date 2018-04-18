@@ -68,27 +68,51 @@ public class DetailActivity extends AppCompatActivity {
         TextView ingredientsTextView = findViewById(R.id.ingredients_tv);
         TextView descriptionTextView = findViewById(R.id.description_tv);
 
-        alsoKnownAsTextView.setText(join(sandwich.getAlsoKnownAs(), ", "));
-        originTextView.setText(sandwich.getPlaceOfOrigin());
-        ingredientsTextView.setText(join(sandwich.getIngredients(), ", "));
+        setAlsoKnownAs(sandwich, alsoKnownAsTextView);
+        setOrigin(sandwich, originTextView);
+        ingredientsTextView.setText(join(sandwich.getIngredients()));
         descriptionTextView.setText(sandwich.getDescription());
+    }
+
+    private void setOrigin(Sandwich sandwich, TextView originTextView) {
+        String placeOfOrigin = sandwich.getPlaceOfOrigin();
+
+        if("".equals(placeOfOrigin)) {
+            originTextView.setText(R.string.unknown);
+
+        } else {
+            originTextView.setText(placeOfOrigin);
+        }
+    }
+
+    private void setAlsoKnownAs(Sandwich sandwich, TextView alsoKnownAsTextView) {
+        String alsoKnownAs = join(sandwich.getAlsoKnownAs());
+
+        if("".equals(alsoKnownAs)) {
+            alsoKnownAsTextView.setText(String.format("Only known as '%s'", sandwich.getMainName()));
+
+        } else {
+            alsoKnownAsTextView.setText(alsoKnownAs);
+        }
     }
 
     /*
      * I decided to join the list of elements into a single String separated by commas.
      */
-    private String join(List<String> list, String separator) {
+    private String join(List<String> list) {
         StringBuilder sb = new StringBuilder();
 
-        boolean first = true;
+        for(int index = 0; index < list.size(); index++) {
+            String item = list.get(index);
 
-        for(String item : list) {
-            if(first) {
+            if(index == 0) {
                 sb.append(item);
-                first = false;
+
+            } else if(index == list.size() - 1){
+                sb.append(" and ").append(item);
 
             } else {
-                sb.append(separator).append(item);
+                sb.append(", ").append(item);
             }
         }
 
